@@ -2,22 +2,30 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
+	"time"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
-	_ "github.com/lib/pq"
 )
 
 var db *sql.DB
 var err error
 
 func main() {
-	databaseURI := os.Getenv("MYPOSTGRES_URL")
+	//databaseURI := os.Getenv("MYSQL_URL")
 
-	db, err = sql.Open("postgres", databaseURI)
+	db, err = sql.Open("mysql", "mr5j21hizy137wdq:nlg9q2kkx99dqruc@irkm0xtlo2pcmvvz.chr7pe7iynqr.eu-west-1.rds.amazonaws.com:3306/nzwyicxlxzeuimx2") //databaseURI
+	check(err)
+	defer db.Close()
+
+	err = db.Ping()
 	check(err)
 
 	port := os.Getenv("PORT")
@@ -26,9 +34,9 @@ func main() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/", Index)
 	router.HandleFunc("/messages", PostMessageHandler).Methods("POST")
 	router.HandleFunc("messages/{id:[0-9]+}", GetMessageHandler).Methods("GET")
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
 
@@ -37,11 +45,32 @@ func Index(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostMessageHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
 
+	var message string
+	b, _ := ioutil.ReadAll(r.Body)
+	json.Unmarshal(b, &message)
+
+	id := random(0, 99999)
+	check(err)
+	_, err := db.Exec("INSERT INTO messages(message, id) VALUES(?, ?)", message, id)
+	check(err)
 }
 
 func GetMessageHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+	id := vars["id"]
+
+	var message string
+	err = db.QueryRow("SELECT message FROM messages WHERE id = ?", id).Scan(&message)
+	check(err)
+
+	fmt.Fprintf(w, "Message: %v\n", message)
+}
+
+func random(min, max int) int {
+	rand.Seed(time.Now().Unix())
+	return rand.Intn(max-min) + min
 }
 
 func check(err error) {
