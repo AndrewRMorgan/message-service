@@ -49,6 +49,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var message string
+	var responseId int
 	response := Response{}
 
 	r.ParseForm()
@@ -61,12 +62,14 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	_, err = db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
 	check(err)
 
-	response = Response{Id: id}
+	err = db.QueryRow("SELECT id FROM messages WHERE id = ?", id).Scan(&responseId)
+	check(err)
+	response = Response{Id: responseId}
 	js, _ := json.Marshal(response)
 	check(err)
 	w.Header().Set("Content-Type", "application/json")
 
-	fmt.Fprintf(w, "%+v\n", js)
+	fmt.Fprintf(w, "%s", js)
 }
 
 func getMessageHandler(w http.ResponseWriter, r *http.Request) {
