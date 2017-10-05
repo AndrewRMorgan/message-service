@@ -35,7 +35,7 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/", index)
-	router.HandleFunc("/messages", postMessageHandler).Methods("POST")
+	router.HandleFunc("/messages/", postMessageHandler).Methods("POST")
 	router.HandleFunc("/messages/{id:[0-9]+}", getMessageHandler).Methods("GET")
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
@@ -55,6 +55,8 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	check(err)
 	_, err := db.Exec("INSERT INTO messages(message, id) VALUES(?, ?)", message, id)
 	check(err)
+
+	fmt.Fprintf(w, "Message: %v\n Id: %v\n", message, id)
 }
 
 func getMessageHandler(w http.ResponseWriter, r *http.Request) {
