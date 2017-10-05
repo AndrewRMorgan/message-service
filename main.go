@@ -2,9 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
@@ -46,9 +44,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var message string
-	b, _ := ioutil.ReadAll(r.Body)
-	json.Unmarshal(b, &message)
-	fmt.Fprintf(w, "Request: %v\n", message)
+	//b, _ := ioutil.ReadAll(r.Body)
+	fmt.Fprintf(w, "Request: %v\n", r.Body)
 
 	id := random(0, 99999)
 	check(err)
