@@ -36,7 +36,7 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/", index)
 	router.HandleFunc("/messages", postMessageHandler).Methods("POST")
-	router.HandleFunc("messages/{id:[0-9]+}", getMessageHandler).Methods("GET")
+	router.HandleFunc("/messages/{id:[0-9]+}", getMessageHandler).Methods("GET")
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
 
