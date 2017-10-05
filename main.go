@@ -47,8 +47,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var message string
 	b, _ := ioutil.ReadAll(r.Body)
-	fmt.Fprintf(w, "Request: %v\n", b)
 	json.Unmarshal(b, &message)
+	fmt.Fprintf(w, "Request: %v\n", message)
 
 	id := random(0, 99999)
 	check(err)
