@@ -49,6 +49,7 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	var message string
 	b, _ := ioutil.ReadAll(r.Body)
+	fmt.Println(r.Body)
 	json.Unmarshal(b, &message)
 
 	id := random(0, 99999)
