@@ -64,12 +64,13 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = db.QueryRow("SELECT id FROM messages WHERE id = ?", id).Scan(&responseId)
 	check(err)
+
 	response = Response{Id: responseId}
 	js, _ := json.Marshal(response)
 	check(err)
 	w.Header().Set("Content-Type", "application/json")
 
-	fmt.Fprintf(w, "%s", js)
+	fmt.Fprintf(w, "%s\n", js)
 }
 
 func getMessageHandler(w http.ResponseWriter, r *http.Request) {
