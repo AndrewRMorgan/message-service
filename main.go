@@ -17,7 +17,7 @@ var db *sql.DB
 var err error
 
 func main() {
-	databaseURI := os.Getenv("JAWSDB_URL")
+	databaseURI := os.Getenv("MYSQL_URL")
 
 	db, err = sql.Open("mysql", databaseURI)
 	check(err)
