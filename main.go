@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
@@ -15,6 +16,10 @@ import (
 
 var db *sql.DB
 var err error
+
+type JSONResponse struct {
+	Id int `json:"id"`
+}
 
 func main() {
 	databaseURI := os.Getenv("MYSQL_URL")
@@ -57,7 +62,10 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	_, err = db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
 	check(err)
 
-	fmt.Fprintf(w, "Id: %v\n", id)
+	response := JSONResponse{Id: id}
+	js, _ := json.Marshal(response)
+
+	fmt.Fprintf(w, "Id: %v\n", js)
 }
 
 func getMessageHandler(w http.ResponseWriter, r *http.Request) {
