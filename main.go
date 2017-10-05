@@ -16,7 +16,7 @@ import (
 var db *sql.DB
 var err error
 
-type JSONResponse struct {
+type Response struct {
 	Id int `json:"id"`
 }
 
@@ -48,7 +48,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var message string
-	var response JSONResponse
+	var response Response
 
 	r.ParseForm()
 	for key := range r.PostForm {
@@ -62,10 +62,9 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	_, err = db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
 	check(err)
 
-	response = JSONResponse{Id: id}
-	//js, _ := json.Marshal(response)
+	response = Response{Id: id}
 
-	fmt.Fprintf(w, "Id: %v\n", response)
+	fmt.Fprintf(w, "%+v\n", response)
 }
 
 func getMessageHandler(w http.ResponseWriter, r *http.Request) {
@@ -76,7 +75,7 @@ func getMessageHandler(w http.ResponseWriter, r *http.Request) {
 	err = db.QueryRow("SELECT message FROM messages WHERE id = ?", id).Scan(&message)
 	check(err)
 
-	fmt.Fprintf(w, "Message: %v\n", message)
+	fmt.Fprintf(w, "%v\n", message)
 }
 
 func random(min, max int) int {
