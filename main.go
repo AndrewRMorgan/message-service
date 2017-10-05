@@ -45,8 +45,6 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func postMessageHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
-
 	var message string
 	b, _ := ioutil.ReadAll(r.Body)
 	fmt.Println(r.Body)
