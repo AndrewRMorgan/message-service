@@ -4,9 +4,17 @@
 <title>Message Service</title>
 </head>
 <body>
-<form action="/messages/" method="post">
-    Message:<input type="text" name="message">
-    <input type="submit" value="Store Message">
+  <div>
+    <h1>Thanks for visiting Andy's Message Service</h1>
+    <br />
+    <p>To store a message simply use the curl command:</p>
+    <p>curl https://fierce-shelf-71001.herokuapp.com/messages/ -d "Your message here"</p>
+    <p>Output: {"id": 12345}</p>
+    <br />
+    <p>And to retrieve a message simply use the curl command:</p>
+    <p>curl https://fierce-shelf-71001.herokuapp.com/messages/</p>
+    <p>Output: Your message here</p>
+  </div>
 </form>
 </body>
 </html>
