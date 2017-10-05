@@ -48,6 +48,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var message string
+	var response JSONResponse
 
 	r.ParseForm()
 	for key := range r.PostForm {
@@ -61,7 +62,7 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	_, err = db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
 	check(err)
 
-	response := JSONResponse{Id: id}
+	response = JSONResponse{Id: id}
 	//js, _ := json.Marshal(response)
 
 	fmt.Fprintf(w, "Id: %v\n", response)
