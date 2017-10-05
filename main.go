@@ -46,14 +46,19 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var message string
 	//b, _ := ioutil.ReadAll(r.Body)
 	r.ParseForm()
-	fmt.Fprintf(w, "Request Form: %v\n", r.PostForm)
+
+	for key, _ := range r.PostForm {
+		message = key
+	}
+
+	fmt.Fprintf(w, "Message: %v\n", message)
 
 	id := random(0, 99999)
 	check(err)
 	_, err := db.Exec("INSERT INTO messages(message, id) VALUES(?, ?)", message, id)
 	check(err)
 
-	fmt.Fprintf(w, "Message: %v\n Id: %v\n", message, id)
+	fmt.Fprintf(w, "Id: %v\n", id)
 }
 
 func getMessageHandler(w http.ResponseWriter, r *http.Request) {
