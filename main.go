@@ -34,17 +34,17 @@ func main() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/messages", PostMessageHandler).Methods("POST")
-	router.HandleFunc("messages/{id:[0-9]+}", GetMessageHandler).Methods("GET")
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
+	router.HandleFunc("/", index)
+	router.HandleFunc("/messages", postMessageHandler).Methods("POST")
+	router.HandleFunc("messages/{id:[0-9]+}", getMessageHandler).Methods("GET")
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
 
-func Index(w http.ResponseWriter, r *http.Request) {
-
+func index(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "./static/index.html")
 }
 
-func PostMessageHandler(w http.ResponseWriter, r *http.Request) {
+func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
 
 	var message string
@@ -57,7 +57,7 @@ func PostMessageHandler(w http.ResponseWriter, r *http.Request) {
 	check(err)
 }
 
-func GetMessageHandler(w http.ResponseWriter, r *http.Request) {
+func getMessageHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
