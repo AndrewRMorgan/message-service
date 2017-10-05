@@ -17,7 +17,7 @@ var db *sql.DB
 var err error
 
 type Response struct {
-	Id int `json:"id"`
+	id int `json:"id"`
 }
 
 func main() {
@@ -55,14 +55,12 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 		message = key
 	}
 
-	fmt.Fprintf(w, "Message: %v\n", message)
-
 	id := random(0, 99999)
 	check(err)
 	_, err = db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
 	check(err)
 
-	response = Response{Id: id}
+	response = Response{id: id}
 
 	fmt.Fprintf(w, "%+v\n", response)
 }
