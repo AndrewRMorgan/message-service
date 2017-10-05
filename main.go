@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
@@ -17,7 +18,7 @@ var db *sql.DB
 var err error
 
 type Response struct {
-	id interface{} `json:"id"`
+	Id interface{} `json:"id"`
 }
 
 func main() {
@@ -60,9 +61,12 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	_, err = db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
 	check(err)
 
-	response = Response{id: id}
+	response = Response{Id: id}
+	js, _ := json.Marshal(response)
+	check(err)
+	w.Header().Set("Content-Type", "application/json")
 
-	fmt.Fprintf(w, "%+v\n", response)
+	fmt.Fprintf(w, "%+v\n", js)
 }
 
 func getMessageHandler(w http.ResponseWriter, r *http.Request) {
