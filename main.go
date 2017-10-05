@@ -46,7 +46,7 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var message string
 	//b, _ := ioutil.ReadAll(r.Body)
 	r.ParseForm()
-	fmt.Fprintf(w, "Request Form: %v\n", r.Form)
+	fmt.Fprintf(w, "Request Form: %v\n", r.PostForm)
 
 	id := random(0, 99999)
 	check(err)
