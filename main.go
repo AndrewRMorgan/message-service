@@ -19,9 +19,9 @@ var db *sql.DB
 var err error
 
 func main() {
-	//databaseURI := os.Getenv("MYSQL_URL")
+	databaseURI := os.Getenv("JAWSDB_URL")
 
-	db, err = sql.Open("mysql", "mysql://mr5j21hizy137wdq:nlg9q2kkx99dqruc@irkm0xtlo2pcmvvz.chr7pe7iynqr.eu-west-1.rds.amazonaws.com:3306/nzwyicxlxzeuimx2") //databaseURI
+	db, err = sql.Open("mysql", databaseURI)
 	check(err)
 	defer db.Close()
 
