@@ -18,7 +18,7 @@ var db *sql.DB
 var err error
 
 type Response struct {
-	id int `json:"id"`
+	id interface{} `json:"id"`
 }
 
 func main() {
@@ -49,7 +49,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var message string
-	var response Response
+	response := Response{}
 
 	r.ParseForm()
 	for key := range r.PostForm {
