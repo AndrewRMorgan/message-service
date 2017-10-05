@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
@@ -61,8 +62,10 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	check(err)
 
 	response = Response{id: id}
+	js, _ := json.Marshal(response)
+	w.Header().Set("Content-Type", "application/json")
 
-	fmt.Fprintf(w, "%+v\n", response)
+	fmt.Fprintf(w, "%+v\n", js)
 }
 
 func getMessageHandler(w http.ResponseWriter, r *http.Request) {
