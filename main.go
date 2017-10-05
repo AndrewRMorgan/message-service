@@ -45,6 +45,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var message string
 	//b, _ := ioutil.ReadAll(r.Body)
+	err := r.ParseForm()
 	fmt.Fprintf(w, "Request: %v\n", r.Form)
 
 	id := random(0, 99999)
