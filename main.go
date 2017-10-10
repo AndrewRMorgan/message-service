@@ -100,6 +100,7 @@ func random(min, max int) int {
 		random(0, 999999)
 	} else if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
+		return 123
 	}
 
 	return id
