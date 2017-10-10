@@ -5,16 +5,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"math/rand"
 	"net/http"
 	"os"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
 var db *sql.DB
+var err error
 
 type response struct {
 	ID interface{} `json:"id"`
@@ -23,7 +22,7 @@ type response struct {
 func main() {
 	databaseURI := os.Getenv("MYSQL_URL")
 
-	db, err := sql.Open("mysql", databaseURI)
+	db, err = sql.Open("mysql", databaseURI)
 	if err != nil {
 		println("Error:", err.Error())
 	}
@@ -66,8 +65,8 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("Error:", err.Error())
 		} else {
-			response := response{ID: responseID}
-			js, _ := json.Marshal(response)
+			jsonResponse := response{ID: responseID}
+			js, _ := json.Marshal(jsonResponse)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprintf(w, "%s\n", js)
 		}
@@ -85,9 +84,4 @@ func getMessageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "%v\n", message)
-}
-
-func random(min, max int) int {
-	rand.Seed(time.Now().Unix())
-	return rand.Intn(max-min) + min
 }
