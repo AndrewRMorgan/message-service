@@ -60,6 +60,7 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := random(0, 999999, w, r)
+	fmt.Fprintf(w, "Returned Id: %v\n", id)
 
 	res, err := db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
 	if err != nil {
@@ -100,12 +101,12 @@ func random(min int, max int, w http.ResponseWriter, r *http.Request) int {
 	err := db.QueryRow("SELECT * FROM messages WHERE id = ?", id).Scan(&returnedID)
 	fmt.Fprintf(w, "%v\n", err)
 
-	if err != sql.ErrNoRows {
+	if err.Error() != "sql: no rows in result set" {
 		random(0, 999999, w, r)
 	} else if err != nil {
 		fmt.Fprintf(w, "Random Function - Error: %v\n", err)
 	}
 
-	fmt.Fprintf(w, "%v\n", id)
+	fmt.Fprintf(w, "Id being returned: %v\n", id)
 	return id
 }
