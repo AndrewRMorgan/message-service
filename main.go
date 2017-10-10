@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -57,7 +59,9 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 		message = key
 	}
 
-	res, err := db.Exec("INSERT INTO messages(message) VALUES(?)", message)
+	id := random(0, 999999)
+
+	res, err := db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
 	if err != nil {
 		fmt.Fprintf(w, "%v\n", err)
 	} else {
@@ -84,4 +88,19 @@ func getMessageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "%v\n", message)
+}
+
+func random(min, max int) int {
+	var returnedID string
+
+	rand.Seed(time.Now().Unix())
+	id := rand.Intn(max-min) + min
+	err := db.QueryRow("SELECT id FROM messages WHERE id = ?", id).Scan(&returnedID)
+	if err != sql.ErrNoRows {
+		random(0, 999999)
+	} else if err != nil {
+		log.Fatal(err)
+	}
+
+	return id
 }
