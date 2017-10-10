@@ -67,6 +67,7 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Error: %v\n", err)
 	} else {
 		responseID, err := res.LastInsertId()
+		fmt.Fprintf(w, "Response Id: %v\n", responseID)
 		if err != nil {
 			fmt.Fprintf(w, "Error: %v\n", err)
 		} else {
