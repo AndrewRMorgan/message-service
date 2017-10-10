@@ -71,6 +71,7 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "%s\n", js)
 		}
 	}
+	defer db.Close()
 }
 
 func getMessageHandler(w http.ResponseWriter, r *http.Request) {
@@ -82,6 +83,7 @@ func getMessageHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	defer db.Close()
 
 	fmt.Fprintf(w, "%v\n", message)
 }
