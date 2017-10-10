@@ -24,11 +24,15 @@ func main() {
 	databaseURI := os.Getenv("MYSQL_URL")
 
 	db, err := sql.Open("mysql", databaseURI)
-	check(err)
+	if err != nil {
+		println("Error:", err.Error())
+	}
 	defer db.Close()
 
 	err = db.Ping()
-	check(err)
+	if err != nil {
+		println("Error:", err.Error())
+	}
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -64,7 +68,6 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			response := response{ID: responseID}
 			js, _ := json.Marshal(response)
-			check(err)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprintf(w, "%s\n", js)
 		}
@@ -77,7 +80,9 @@ func getMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	var message string
 	err := db.QueryRow("SELECT message FROM messages WHERE id = ?", id).Scan(&message)
-	check(err)
+	if err != nil {
+		println("Error:", err.Error())
+	}
 
 	fmt.Fprintf(w, "%v\n", message)
 }
@@ -85,10 +90,4 @@ func getMessageHandler(w http.ResponseWriter, r *http.Request) {
 func random(min, max int) int {
 	rand.Seed(time.Now().Unix())
 	return rand.Intn(max-min) + min
-}
-
-func check(err error) {
-	if err != nil {
-		fmt.Println(err)
-	}
 }
