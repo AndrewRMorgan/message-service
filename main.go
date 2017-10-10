@@ -99,7 +99,7 @@ func random(min, max int) int {
 	if err != sql.ErrNoRows {
 		random(0, 999999)
 	} else if err != nil {
-		log.Fatal(err)
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 	}
 
 	return id
