@@ -62,20 +62,14 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 	id := random(0, 999999, w, r)
 	fmt.Fprintf(w, "Returned Id: %v\n", id)
 
-	res, err := db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
+	_, err := db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
 	if err != nil {
 		fmt.Fprintf(w, "Error: %v\n", err)
 	} else {
-		responseID, err := res.LastInsertId()
-		fmt.Fprintf(w, "Response Id: %v\n", responseID)
-		if err != nil {
-			fmt.Fprintf(w, "Error: %v\n", err)
-		} else {
-			jsonResponse := response{ID: responseID}
-			js, _ := json.Marshal(jsonResponse)
-			w.Header().Set("Content-Type", "application/json")
-			fmt.Fprintf(w, "%s\n", js)
-		}
+		jsonResponse := response{ID: id}
+		js, _ := json.Marshal(jsonResponse)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintf(w, "%s\n", js)
 	}
 }
 
@@ -100,12 +94,9 @@ func random(min int, max int, w http.ResponseWriter, r *http.Request) int {
 	fmt.Fprintf(w, "%v\n", id)
 
 	err := db.QueryRow("SELECT * FROM messages WHERE id = ?", id).Scan(&returnedID)
-	fmt.Fprintf(w, "%v\n", err)
-
-	if err.Error() != "sql: no rows in result set" {
+	if err != nil {
+		fmt.Fprintf(w, "Error: %v\n", err)
 		random(0, 999999, w, r)
-	} else if err != nil {
-		fmt.Fprintf(w, "Random Function - Error: %v\n", err)
 	}
 
 	fmt.Fprintf(w, "Id being returned: %v\n", id)
