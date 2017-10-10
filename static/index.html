@@ -1,19 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Message Service</title>
+  <meta charset="UTF-8">
+  <title>Message Storage Microservice</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="description" content="Message Storage Microservice">
+  <meta name="author" content="AndrewRMorgan">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-  <div>
-    <h1>Thanks for visiting Andy's Message Service</h1>
-    <br />
-    <p>To store a message simply use the curl command:</p>
-    <p>curl https://fierce-shelf-71001.herokuapp.com/messages/ -d "Your message here"</p>
-    <p>Output: {"id": 12345}</p>
-    <br />
-    <p>And to retrieve a message simply use the curl command:</p>
-    <p>curl https://fierce-shelf-71001.herokuapp.com/messages/12345</p>
-    <p>Output: Your message here</p>
+  <div class='container-fluid container'>
+    <h1>Message Storage Microservice</h1>
+    <blockquote>
+      User stories:
+      <ul>1) I can store a message as a string and be given an id for that message.</ul>
+      <ul>2) I can retrieve a previously saved string using it's unique id.</ul>
+    </blockquote>
+    <hr />
+    <h3>Example Input:</h3>
+    <h4>To store a message using a curl command:</h4>
+    <code>curl https://fierce-shelf-71001.herokuapp.com/messages/ -d "Your message here"</code>
+    <h3>Example Onput:</h3>
+    <code>{ "id": 12345 }</code>
+    <hr />
+    <h3>Example Input:</h3>
+    <h4>To retrieve a previously saved message using a curl command:</h4>
+    <code>curl https://fierce-shelf-71001.herokuapp.com/messages/12345</code>
+    <h3>Example Onput:</h3>
+    <code>Your message here</code>
   </div>
 </form>
 </body>
