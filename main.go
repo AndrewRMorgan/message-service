@@ -95,8 +95,10 @@ func random(min int, max int, w http.ResponseWriter, r *http.Request) int {
 
 	rand.Seed(time.Now().Unix())
 	id := rand.Intn(max-min) + min
+	fmt.Fprintf(w, "%v\n", id)
+
 	err := db.QueryRow("SELECT * FROM messages WHERE id = ?", id).Scan(&returnedID)
-	if err != sql.ErrNoRows {
+	if err.Error() != "sql: no rows in result set" {
 		random(0, 999999, w, r)
 	} else if err != nil {
 		fmt.Fprintf(w, "Random Function - Error: %v\n", err)
