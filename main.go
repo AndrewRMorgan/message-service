@@ -24,13 +24,13 @@ func main() {
 
 	db, err = sql.Open("mysql", databaseURI)
 	if err != nil {
-		println("Error:", err.Error())
+		fmt.Println(err)
 	}
 	defer db.Close()
 
 	err = db.Ping()
 	if err != nil {
-		println("Error:", err.Error())
+		fmt.Println(err)
 	}
 
 	port := os.Getenv("PORT")
@@ -59,11 +59,11 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	res, err := db.Exec("INSERT INTO messages(message) VALUES(?)", message)
 	if err != nil {
-		println("Error:", err.Error())
+		fmt.Println(err)
 	} else {
 		responseID, err := res.LastInsertId()
 		if err != nil {
-			println("Error:", err.Error())
+			fmt.Println(err)
 		} else {
 			jsonResponse := response{ID: responseID}
 			js, _ := json.Marshal(jsonResponse)
@@ -80,7 +80,7 @@ func getMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var message string
 	err := db.QueryRow("SELECT message FROM messages WHERE id = ?", id).Scan(&message)
 	if err != nil {
-		println("Error:", err.Error())
+		fmt.Println(err)
 	}
 
 	fmt.Fprintf(w, "%v\n", message)
