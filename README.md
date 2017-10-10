@@ -9,7 +9,7 @@ To store a message using a curl command:
 ```text
 curl https://fierce-shelf-71001.herokuapp.com/messages/ -d "Your message here"
 ```
-### Example output:
+### Example Output:
 ```js
 { "id": 12345 }
 ```
