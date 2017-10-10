@@ -5,16 +5,21 @@
 2. I can retrieve a previously saved string using it's unique id.
 
 ## Example Input:
-
-To store a message simply use the curl command:
+To store a message using a curl command:
 ```text
 curl https://fierce-shelf-71001.herokuapp.com/messages/ -d "Your message here"
 ```
-
 ## Example output:
 ```js
 { "id": 12345 }
 ```
 
-
-
+## Example Input:
+To retrieve a previously saved message using a curl command:
+```text
+curl https://fierce-shelf-71001.herokuapp.com/messages/12345
+```
+## Example output:
+```js
+Your message here
+```
