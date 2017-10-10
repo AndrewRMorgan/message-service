@@ -63,11 +63,11 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	res, err := db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
 	if err != nil {
-		fmt.Fprintf(w, "%v\n", err)
+		fmt.Fprintf(w, "Error: %v\n", err)
 	} else {
 		responseID, err := res.LastInsertId()
 		if err != nil {
-			fmt.Fprintf(w, "%v\n", err)
+			fmt.Fprintf(w, "Error: %v\n", err)
 		} else {
 			jsonResponse := response{ID: responseID}
 			js, _ := json.Marshal(jsonResponse)
@@ -84,23 +84,22 @@ func getMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var message string
 	err := db.QueryRow("SELECT message FROM messages WHERE id = ?", id).Scan(&message)
 	if err != nil {
-		fmt.Fprintf(w, "%v\n", err)
+		fmt.Fprintf(w, "Error: %v\n", err)
 	}
 
 	fmt.Fprintf(w, "%v\n", message)
 }
 
-func random(min, max int, w http.ResponseWriter, r *http.Request) int {
+func random(min int, max int, w http.ResponseWriter, r *http.Request) int {
 	var returnedID string
 
 	rand.Seed(time.Now().Unix())
 	id := rand.Intn(max-min) + min
-	err := db.QueryRow("SELECT id FROM messages WHERE id = ?", id).Scan(&returnedID)
+	err := db.QueryRow("SELECT * FROM messages WHERE id = ?", id).Scan(&returnedID)
 	if err != sql.ErrNoRows {
 		random(0, 999999, w, r)
 	} else if err != nil {
-		fmt.Fprintf(w, "%v\n", err.Error())
-		return 123
+		fmt.Fprintf(w, "Random Function - Error: %v\n", err)
 	}
 
 	return id
