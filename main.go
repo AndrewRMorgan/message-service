@@ -99,7 +99,7 @@ func random(min, max int, w http.ResponseWriter, r *http.Request) int {
 	if err != sql.ErrNoRows {
 		random(0, 999999, w, r)
 	} else if err != nil {
-		fmt.Fprintf(w, "%v\n", err)
+		fmt.Fprintf(w, "%v\n", err.Error())
 		return 123
 	}
 
