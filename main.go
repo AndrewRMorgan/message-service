@@ -59,7 +59,7 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 		message = key
 	}
 
-	id := random(0, 999999)
+	id := random(0, 999999, w, r)
 
 	res, err := db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
 	if err != nil {
@@ -90,16 +90,16 @@ func getMessageHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%v\n", message)
 }
 
-func random(min, max int) int {
+func random(min, max int, w http.ResponseWriter, r *http.Request) int {
 	var returnedID string
 
 	rand.Seed(time.Now().Unix())
 	id := rand.Intn(max-min) + min
 	err := db.QueryRow("SELECT id FROM messages WHERE id = ?", id).Scan(&returnedID)
 	if err != sql.ErrNoRows {
-		random(0, 999999)
+		random(0, 999999, w, r)
 	} else if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
+		fmt.Fprintf(w, "%v\n", err)
 		return 123
 	}
 
