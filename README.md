@@ -23,3 +23,6 @@ curl https://fierce-shelf-71001.herokuapp.com/messages/12345
 ```js
 Your message here
 ```
+---
+### Notes:
+- Empty strings will not throw an error and will be stored as an empty string.
