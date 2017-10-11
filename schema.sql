@@ -23,10 +23,10 @@ DROP TABLE IF EXISTS `messages`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `messages` (
-  `id` int(11) NOT NULL,
-  `message` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,7 +35,7 @@ CREATE TABLE `messages` (
 
 LOCK TABLES `messages` WRITE;
 /*!40000 ALTER TABLE `messages` DISABLE KEYS */;
-INSERT INTO `messages` VALUES (554,'definitely the last message'),(12345,'This is a message'),(12570,'lots of test messages'),(19742,'this is awesome'),(19892,'oh yeah!'),(25021,'message'),(26961,'one more for the road'),(27880,'will it work?'),(37828,'my test message'),(38184,'just in case'),(39661,'definitely the last message'),(46886,'another test message'),(55152,'this is the one'),(58820,'will it work?'),(61256,'definitely the last message'),(63456,'Testy test'),(71689,'definitely the last message'),(73783,'Your message here'),(74201,'will it work?'),(76454,'one last message'),(83763,'definitely the last message'),(94311,'another test message'),(98804,'definitely the last message');
+INSERT INTO `messages` VALUES (1,'this is a message'),(2,'this is another message'),(3,'third message');
 /*!40000 ALTER TABLE `messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-10-10 12:21:00
+-- Dump completed on 2017-10-11 13:32:32
