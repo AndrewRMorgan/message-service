@@ -5,10 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"math/rand"
 	"net/http"
 	"os"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -26,13 +24,13 @@ func main() {
 
 	db, err = sql.Open("mysql", databaseURI)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("An error occured while opening the database - Error details:", err)
 	}
 	defer db.Close()
 
 	err = db.Ping()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("An error occurred while testing the connection with the database - Error details:", err)
 	}
 
 	port := os.Getenv("PORT")
@@ -44,6 +42,7 @@ func main() {
 	router.HandleFunc("/", index)
 	router.HandleFunc("/messages/", postMessageHandler).Methods("POST")
 	router.HandleFunc("/messages/{id:[0-9]+}", getMessageHandler).Methods("GET")
+	router.NotFoundHandler = http.HandlerFunc(notFound)
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
 
@@ -59,13 +58,14 @@ func postMessageHandler(w http.ResponseWriter, r *http.Request) {
 		message = key
 	}
 
-	id := random(0, 999999, w, r)
-	fmt.Fprintf(w, "Returned Id: %v\n", id)
-
-	_, err := db.Exec("INSERT INTO messages(id, message) VALUES(?, ?)", id, message)
+	res, err := db.Exec("INSERT INTO messages(message) VALUES(?)", message)
 	if err != nil {
-		fmt.Fprintf(w, "Error: %v\n", err)
+		fmt.Fprintf(w, "An error occurred while trying to insert the message into the database - Error details: %v\n", err)
 	} else {
+		id, err := res.LastInsertId()
+		if err != nil {
+			fmt.Fprintf(w, "An error occured while trying to retrieve the id of the last inserted entry - Error details: %v\n", err)
+		}
 		jsonResponse := response{ID: id}
 		js, _ := json.Marshal(jsonResponse)
 		w.Header().Set("Content-Type", "application/json")
@@ -80,25 +80,12 @@ func getMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var message string
 	err := db.QueryRow("SELECT message FROM messages WHERE id = ?", id).Scan(&message)
 	if err != nil {
-		fmt.Fprintf(w, "Error: %v\n", err)
+		fmt.Fprintf(w, "An error occured while trying to retrieve a message from the database - Error details: %v\n", err)
 	}
 
 	fmt.Fprintf(w, "%v\n", message)
 }
 
-func random(min int, max int, w http.ResponseWriter, r *http.Request) int {
-	var returnedID string
-
-	rand.Seed(time.Now().Unix())
-	id := rand.Intn(max-min) + min
-	fmt.Fprintf(w, "%v\n", id)
-
-	err := db.QueryRow("SELECT * FROM messages WHERE id = ?", id).Scan(&returnedID)
-	if err != nil {
-		fmt.Fprintf(w, "Error: %v\n", err)
-		random(0, 999999, w, r)
-	}
-
-	fmt.Fprintf(w, "Id being returned: %v\n", id)
-	return id
+func notFound(w http.ResponseWriter, r *http.Request) {
+	fmt.Print("Unfortunately you have requested an endpoint that doesn't exist, please refer to the relevant documentation.")
 }
